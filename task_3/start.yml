@@ -1,0 +1,6 @@
+---
+- name: Install apache
+  hosts: node1.example.com
+  roles:
+    - httpd
+    - firewalld

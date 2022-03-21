@@ -1,0 +1,47 @@
+---
+- name: Change grub
+  hosts: node1.example.com
+  tasks:
+  - name: check net.ifnames=0
+    lineinfile:
+      backup: true
+      path: "/etc/default/grub"
+      regexp: '^GRUB_CMDLINE_LINUX=".*net.ifnames=0'
+      state: absent
+    check_mode: true
+    register: grub_cmdline_check_1
+    changed_when: false  
+  
+  - name: insert net.ifnames=0
+    lineinfile:
+      backrefs: true
+      path: /etc/default/grub
+      regexp: "^(GRUB_CMDLINE_LINUX=\".*)\"$"
+      line: '\1 net.ifnames=0"'
+    when: grub_cmdline_check_1.found == 0
+    notify: generate grub
+
+  - name: check biosdevname=0
+    lineinfile:
+      backup: true
+      path: "/etc/default/grub"
+      regexp: '^GRUB_CMDLINE_LINUX=".*biosdevname=0'
+      state: absent
+    check_mode: true
+    register: grub_cmdline_check_2
+    changed_when: false  
+  
+  - name: insert biosdevname=0
+    lineinfile:
+      backrefs: true
+      path: /etc/default/grub
+      regexp: "^(GRUB_CMDLINE_LINUX=\".*)\"$"
+      line: '\1 biosdevname=0"'
+    when: grub_cmdline_check_2.found == 0
+    notify: generate grub
+
+  handlers:
+  - name: generate grub
+    command: "grub2-mkconfig -o /boot/grub2/grub.cfg"
+
+...

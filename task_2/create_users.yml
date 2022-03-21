@@ -1,0 +1,16 @@
+---
+- name: Create users
+  hosts: node1.example.com
+  vars_files:
+  - passw.yml
+  tasks:
+    - name: Create users
+      user:
+        name: "{{ item.key }}"
+        comment: "{{ item.value.comment }}"
+        home: "{{ item.value.home }}"
+        password: "{{ item.value.password | string | password_hash('sha512') }}"
+        update_password: on_create
+        state: present
+      loop: "{{ lookup('dict', users) }}"
+...

@@ -1,0 +1,7 @@
+- name: Open port 80
+  firewalld:
+    service: http
+    permanent: true
+    state: enabled
+  notify:
+  - Restart firewalld
