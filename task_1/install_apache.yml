@@ -1,8 +1,8 @@
 ---
 - name: Install Apache
-  hosts: node1.example.com
+  hosts: all
   tasks:
-  - name: install apache
+  - name: install service apache
     yum: 
       name: httpd
       state: present
@@ -10,12 +10,16 @@
     service:
       name: httpd
       state: started
-  - name: Open port 80
+  - name: creating a file index.html
+    copy:
+      dest: "/var/www/html/index.html"
+      content: Welcome to my web server
+  - name: open port 80
     firewalld:
       service: http
       permanent: true
       state: enabled
-  - name: Restart firewalld
+  - name: restart firewalld
     service:
       name: firewalld
       state: restarted

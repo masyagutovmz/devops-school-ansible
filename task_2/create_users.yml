@@ -1,6 +1,6 @@
 ---
 - name: Create users
-  hosts: node1.example.com
+  hosts: all
   vars_files:
   - passw.yml
   tasks:

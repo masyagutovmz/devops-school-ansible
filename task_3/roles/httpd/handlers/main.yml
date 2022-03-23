@@ -1,4 +1,11 @@
+---
+# handlers file for httpd
 - name: start_apache
   service:
-    name: httpd
+    name: "{{ web_service_name }}"
     state: started
+
+- name: restart_firewalld 
+  service:
+    name: firewalld
+    state: restarted

@@ -1,0 +1,60 @@
+---
+# tasks file for ftp
+- name: install packages
+  yum: 
+    name: "{{ item }}"
+    state: present
+  loop: "{{ packages }}"
+  notify: 
+  - start_ftp
+
+- name: create dir /var/ftp/pub
+  file:
+    path: /var/ftp/pub
+    state: directory
+    mode: '0755'
+
+- name: create dir /var/ftp/pub/upload
+  file:
+    path: /var/ftp/pub/upload
+    state: directory
+    mode: '0777'
+
+- name: Change file ownership, group and permissions
+  file:
+    path: /var/ftp/pub
+    owner: nobody
+    group: nobody
+    recurse: yes
+
+- name: create vsftpd.conf using Jinja2
+  template:
+   src: vsftpd.conf.j2
+   dest: /etc/vsftpd/vsftpd.conf
+  notify: 
+  - restart_ftp
+
+- name: set SElinux boolean for Anonymous FTP upload
+  seboolean:
+    name: ftpd_anon_write
+    state: true
+    persistent: yes
+
+- name: set SElinux file context
+  sefcontext:
+    target: /var/ftp/pub/upload(/.*)?
+    setype: public_content_rw_t
+    reload: True
+    state: present
+  notify:
+  - run restorecon
+
+- name: open ports ftp
+  firewalld:
+    service: ftp
+    permanent: yes
+    state: enabled
+    immediate: yes
+  notify: 
+  - restart_firewalld
+

@@ -1,6 +1,6 @@
 ---
 - name: Change grub
-  hosts: node1.example.com
+  hosts: all
   tasks:
   - name: check net.ifnames=0
     lineinfile:

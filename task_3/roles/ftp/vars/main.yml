@@ -1,0 +1,16 @@
+---
+# vars file for ftp
+vsftpd_write_enable: "YES"
+vsftpd_anonymous_enable: "YES"
+vsftpd_anon_upload_enable: "YES"
+vsftpd_anon_mkdir_write_enable: "YES"
+vsftpd_anon_umask: 000
+#vsftpd_anon_other_write_enable: "YES"
+vsftpd_anon_root: /var/ftp/pub
+#vsftpd_no_anon_password: "YES"
+fileperms:
+- /var/ftp/pub
+- /var/ftp/pub/upload
+packages:
+- vsftpd
+- policycoreutils-python-utils

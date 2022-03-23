@@ -1,0 +1,19 @@
+---
+# handlers file for ftp
+- name: start_ftp
+  service:
+    name: vsftpd
+    state: started
+
+- name: restart_ftp 
+  service:
+    name: vsftpd
+    state: restarted
+
+- name: restart_firewalld 
+  service:
+    name: firewalld
+    state: restarted
+
+- name: run restorecon
+  command: restorecon -Rv /var/ftp/pub/upload

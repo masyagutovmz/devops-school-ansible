@@ -1,8 +1,8 @@
 ---
 - name: Remove Apache
-  hosts: node1.example.com
+  hosts: all
   tasks:
-  - name: remove apache
+  - name: remove service apache
     yum: 
       name: httpd
       state: removed
